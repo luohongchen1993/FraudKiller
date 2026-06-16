@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>M² · Fraud Watch — Track 02</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <!-- brand -->
+    <div class="brandline"><b>M²</b> <span>Fraud Watch</span> <em>Track 02 prototype</em></div>
+
+    <!-- product brief -->
+    <div class="kicker">PRODUCT BRIEF</div>
+    <h1 id="brief-title">Three-minute case triage for Crestline's hidden fraud ring.</h1>
+    <p id="brief-sub" class="lede"></p>
+
+    <div class="cta">
+      <button class="ghost" id="btn-load">Load Kaggle CSV/JSON</button>
+      <button class="ghost" id="btn-restore">Restore sample data</button>
+    </div>
+
+    <!-- analyst queue stats -->
+    <section class="panel">
+      <div class="eyebrow">ANALYST QUEUE</div>
+      <h2 id="stage-title">Raw data loaded</h2>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <!-- investigation run (step-by-step) -->
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Investigation Run</h2>
+          <p class="muted">Review the data, then run each backend agent one handoff at a time.</p>
+        </div>
+        <div class="run-controls">
+          <button class="primary sm" id="btn-run-all">Run all agents</button>
+          <button class="ghost sm" id="btn-reset">Reset run</button>
+        </div>
+      </div>
+      <div id="run-steps" class="run-steps"></div>
+    </section>
+
+    <!-- stage output tabs -->
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Step Output</h2>
+          <p class="muted">Each click opens a new result tab so the change is visible.</p>
+        </div>
+      </div>
+      <div id="stage-tabs" class="stage-tabs"></div>
+      <div id="stage-body" class="stage-body"></div>
+    </section>
+
+    <!-- transactions table -->
+    <section class="panel" id="data-panel" hidden>
+      <table class="txns" id="txns">
+        <thead><tr><th>TXN</th><th>FROM</th><th>TO</th><th>AMOUNT</th><th>TIMESTAMP</th><th>DEVICE</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <!-- worst first queue -->
+    <section class="panel" id="queue-panel">
+      <div class="panel-head"><h2 id="queue-title">Findings</h2><span class="muted" id="queue-note"></span></div>
+      <div id="queue" class="queue"></div>
+    </section>
+
+    <!-- selected case detail -->
+    <section class="panel" id="detail" hidden>
+      <div class="panel-head">
+        <div><h2 id="d-title"></h2><p class="muted" id="d-sub"></p></div>
+        <button class="ghost sm" id="btn-download">Download report</button>
+      </div>
+      <div class="stat-grid" id="d-stats"></div>
+      <div class="graph-box"><svg id="graph" viewBox="0 0 520 360" preserveAspectRatio="xMidYMid meet"></svg></div>
+      <div class="reasons">
+        <h3>Visible Reasons</h3>
+        <ul id="d-reasons"></ul>
+      </div>
+      <div class="rec">
+        <h3>Recommended Action</h3>
+        <p id="d-action"></p>
+      </div>
+      <div class="ask">
+        <h3>Ask the Investigator <span class="muted">grounded in the graph</span></h3>
+        <div class="ask-row">
+          <input id="ask-input" placeholder="e.g. which account is the hub and where did the money start?" />
+          <button id="btn-ask">Ask</button>
+        </div>
+        <div id="answers"></div>
+      </div>
+    </section>
+
+    <!-- final summary -->
+    <section class="panel" id="summary-panel" hidden>
+      <div class="panel-head">
+        <div>
+          <h2>Agent 4 Summary</h2>
+          <p class="muted">Signable analyst summary generated from the discovered case, ranking, and action.</p>
+        </div>
+        <button class="ghost sm" id="btn-summary-download">Download summary</button>
+      </div>
+      <div id="summary-body" class="summary-body"></div>
+    </section>
+
+    <!-- cognee memory ledger -->
+    <section class="panel">
+      <div class="panel-head">
+        <div><h2>Cognee Memory Ledger</h2><p class="muted">Each agent writes a memory object consumed by the next agent.</p></div>
+        <button class="ghost sm" id="btn-copy">Copy ledger</button>
+      </div>
+      <div id="ledger" class="ledger"></div>
+    </section>
+
+    <!-- agent interaction history -->
+    <section class="panel">
+      <h2>Agent Interaction History</h2>
+      <p class="muted">Chronological handoffs across Find, Rank, Act, and Summary.</p>
+      <div id="history" class="history"></div>
+    </section>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
