@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PyMC Labs for Fraud Ring Detection</title>
+  <style>
+    :root { --ink:#152033; --muted:#657184; --line:#dfe5ed; --bg:#f6f8fb; --card:#fff; --blue:#2f6fd0; --green:#137a5e; --red:#d64242; --amber:#c98a14; --purple:#6d5bd0; }
+    * { box-sizing:border-box; }
+    html { scroll-snap-type:y proximity; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; }
+    main { max-width:1180px; margin:0 auto; padding:24px 22px 80px; }
+    .slide { min-height:78vh; scroll-snap-align:start; background:var(--card); border:1px solid var(--line); border-radius:18px; padding:30px; margin:22px 0; display:grid; align-content:center; gap:22px; box-shadow:0 16px 45px #17203310; }
+    .kicker { color:var(--blue); font-size:12px; letter-spacing:1.2px; font-weight:900; text-transform:uppercase; }
+    h1 { font-size:48px; line-height:1.05; margin:0; max-width:900px; }
+    h2 { font-size:34px; line-height:1.12; margin:0; }
+    h3 { font-size:18px; margin:0 0 8px; }
+    p { margin:0; color:var(--muted); }
+    .lede { font-size:20px; max-width:900px; }
+    .grid3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+    .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:stretch; }
+    .tile { border:1px solid var(--line); border-radius:14px; padding:18px; background:#fbfcfe; }
+    .big { font-size:38px; font-weight:950; line-height:1; color:var(--ink); }
+    .label { color:var(--muted); font-size:13px; margin-top:7px; }
+    .formula { font-family: ui-monospace, Menlo, Consolas, monospace; background:#101828; color:#edf4ff; border-radius:16px; padding:20px; font-size:18px; overflow:auto; }
+    .flow { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; align-items:center; }
+    .node { border:2px solid var(--line); border-radius:16px; padding:18px; background:#fff; min-height:112px; }
+    .node b { display:block; font-size:16px; margin-bottom:5px; }
+    .arrow { color:var(--blue); font-size:30px; text-align:center; font-weight:900; }
+    .viz { border:1px solid var(--line); border-radius:16px; background:#fbfcfe; padding:18px; }
+    svg { width:100%; height:auto; display:block; }
+    .pill { display:inline-block; border:1px solid var(--line); border-radius:999px; padding:5px 10px; margin:4px 4px 0 0; color:var(--muted); background:#fff; font-size:13px; }
+    .good { color:var(--green); font-weight:900; }
+    .red { color:var(--red); font-weight:900; }
+    .amber { color:var(--amber); font-weight:900; }
+    .foot { color:#8a95a7; font-size:13px; }
+    @media (max-width:860px) { .grid3,.grid2,.flow { grid-template-columns:1fr; } .arrow { transform:rotate(90deg); } h1 { font-size:34px; } h2 { font-size:27px; } .slide { min-height:auto; } }
+  </style>
+</head>
+<body>
+<main>
+  <section class="slide">
+    <div class="kicker">Visual brief</div>
+    <h1>Where PyMC Labs helps in this fraud-ring workflow</h1>
+    <p class="lede">Use graph rules and agents to find evidence. Use PyMC to turn that evidence into calibrated probabilities, uncertainty intervals, and decision thresholds.</p>
+    <div class="grid3">
+      <div class="tile"><div class="big">5,000</div><div class="label">transactions</div></div>
+      <div class="tile"><div class="big">294</div><div class="label">accounts/users</div></div>
+      <div class="tile"><div class="big">250</div><div class="label">account-to-account transfers</div></div>
+      <div class="tile"><div class="big">9</div><div class="label">detected ring accounts</div></div>
+      <div class="tile"><div class="big">$161,751</div><div class="label">ring exposure</div></div>
+      <div class="tile"><div class="big">2-4 AM</div><div class="label">suspicious timing window</div></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>The role split</h2>
+    <div class="flow">
+      <div class="node"><b>Graph detector</b><p>Find candidate rings from topology, timing, amount bands, devices.</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>PyMC model</b><p>Estimate posterior fraud risk and uncertainty from evidence.</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Agents + Cognee</b><p>Store risk artifacts, rank cases, explain decisions, write summaries.</p></div>
+    </div>
+    <p><span class="pill">Rules find candidates</span><span class="pill">Bayes calibrates risk</span><span class="pill">Agents explain and act</span></p>
+  </section>
+
+  <section class="slide">
+    <h2>Example model: fraud probability per transfer</h2>
+    <div class="grid2">
+      <div>
+        <div class="formula">
+P(fraud edgeᵢ = 1) = sigmoid(α + Xᵢβ + u_cluster + u_account)<br><br>
+Xᵢ = [amount band, 2-4AM, shared device, new account, circularity, centrality]
+        </div>
+        <p style="margin-top:14px">PyMC lets us encode fraud-ops priors, then update them with observed data. The output is not just a score; it is a distribution.</p>
+      </div>
+      <div class="viz">
+        <svg viewBox="0 0 520 300" aria-label="Posterior fraud probability curves">
+          <rect x="0" y="0" width="520" height="300" rx="16" fill="#fbfcfe"/>
+          <line x1="58" y1="250" x2="480" y2="250" stroke="#cfd7e3"/>
+          <line x1="58" y1="40" x2="58" y2="250" stroke="#cfd7e3"/>
+          <text x="58" y="280" fill="#657184" font-size="13">0%</text>
+          <text x="448" y="280" fill="#657184" font-size="13">100%</text>
+          <path d="M70 240 C120 238 150 232 180 210 C215 178 238 105 270 78 C310 45 365 52 445 92" fill="none" stroke="#d64242" stroke-width="5"/>
+          <path d="M70 245 C145 242 205 237 260 226 C325 213 378 207 455 215" fill="none" stroke="#2f6fd0" stroke-width="5"/>
+          <rect x="330" y="55" width="95" height="34" rx="17" fill="#fee2e2"/><text x="345" y="77" fill="#b91c1c" font-size="13" font-weight="700">ring edge</text>
+          <rect x="300" y="200" width="118" height="34" rx="17" fill="#dbeafe"/><text x="315" y="222" fill="#1d4ed8" font-size="13" font-weight="700">normal spend</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>Uncertainty changes the action</h2>
+    <div class="grid2">
+      <div class="viz">
+        <svg viewBox="0 0 520 320" aria-label="Decision threshold chart">
+          <rect width="520" height="320" rx="16" fill="#fbfcfe"/>
+          <line x1="70" y1="260" x2="470" y2="260" stroke="#cfd7e3"/>
+          <line x1="70" y1="55" x2="70" y2="260" stroke="#cfd7e3"/>
+          <rect x="92" y="120" width="84" height="140" fill="#dbeafe"/><text x="110" y="288" fill="#657184" font-size="13">watch</text>
+          <rect x="218" y="82" width="84" height="178" fill="#fef3c7"/><text x="234" y="288" fill="#657184" font-size="13">review</text>
+          <rect x="344" y="48" width="84" height="212" fill="#fee2e2"/><text x="361" y="288" fill="#657184" font-size="13">freeze</text>
+          <line x1="332" y1="42" x2="332" y2="260" stroke="#d64242" stroke-width="3" stroke-dasharray="8 7"/>
+          <text x="318" y="33" fill="#d64242" font-size="13" font-weight="700">decision threshold</text>
+        </svg>
+      </div>
+      <div>
+        <h3>Instead of a single brittle score:</h3>
+        <p><span class="red">Freeze</span> if expected fraud loss exceeds customer-friction cost.</p>
+        <p><span class="amber">Review</span> when uncertainty is high but evidence is strong.</p>
+        <p><span class="good">Watch</span> when posterior risk is moderate but not decisive.</p>
+        <div class="formula" style="font-size:15px;margin-top:14px">Action* = argminₐ E[cost(a, fraud_state) | evidence]</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>What a PyMC Labs engagement would likely build</h2>
+    <div class="grid3">
+      <div class="tile"><h3>1. Feature audit</h3><p>Turn graph evidence into statistical features and priors.</p></div>
+      <div class="tile"><h3>2. Bayesian scorer</h3><p>Posterior risk for edge, account, and cluster.</p></div>
+      <div class="tile"><h3>3. Calibration checks</h3><p>Posterior predictive checks, false-positive tradeoffs, drift tests.</p></div>
+      <div class="tile"><h3>4. Decision policy</h3><p>Freeze/watch/clear threshold based on expected cost.</p></div>
+      <div class="tile"><h3>5. Agent artifact</h3><p>Write model outputs into Cognee for agentic summaries.</p></div>
+      <div class="tile"><h3>6. Monitoring</h3><p>Track base-rate shifts and pattern drift over time.</p></div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>Recommended demo framing</h2>
+    <div class="grid2">
+      <div class="tile"><h3>Today</h3><p>Graph detector finds ring. Anthropic agents run Find → Rank → Act → Summary. Cognee stores handoffs.</p></div>
+      <div class="tile"><h3>Next</h3><p>PyMC adds calibrated posterior risk and uncertainty so the ranking and freeze decision become statistically auditable.</p></div>
+    </div>
+    <p class="foot">Sources: PyMC project, PyMC Labs, PyMC-Marketing documentation.</p>
+  </section>
+</main>
+</body>
+</html>
